@@ -18,6 +18,10 @@ Data Cleaning: Used SQL functions to remove non-numeric characters from BMI valu
 
 Null Handling: Executed SQL statements to identify and update null values in critical columns based on context or averages.
 
+SCREENSHOT OF A SELECT STATEMENT DONE:
+
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT-ID-100801304-/assets/138626409/44f0e968-af11-4a7b-8304-79445b2cb7a4)
+
 DATA TRANSFORMATION
 
 In the data transformation phase, I conducted quality checks, performed transformations, and employed aggregation and JOIN operations to derive valuable insights from the health-related data. Here are the details of the transformations I applied:
