@@ -1,0 +1,24 @@
+Age_Category,Sex,General_Health,General_Checkup_Status,General_Exercise_Rate,Avg_BMI,Heart_Disease_Rate,Skin_Cancer_Rate,Other_Cancer_Rate,Depression_Rate,Diabetes_Rate,Arthritis_Rate,Smoking_History_Rate,Average_Alcohol_Consumption,Average_Fruit_Consumption,Average_Green_Vegetables_Consumption,Average_FriedPotato_Consumption
+18-24,Female,Very Good,Within the past year,Yes,24.33,0,0,0,0.3333,0,0,0,2.6667,40,18,17
+18-24,Male,Good,Within the past year,Yes,25.1,0,0,0,1,0,0,0,0,30,2,4
+25-29,Female,Good,Within the past year,No,18.01,0,0,0,0,0,0,0,1,60,3,10
+30-34,Female,Very Good,Within the past year,Yes,34.38,0,0,0,0.3333,0.3333,0,0,3,5,29.3333,9
+30-34,Male,Fair,Within the past year,Yes,31.75,0,0,0,0,0,0,0,0,30,8,8
+35-39,Female,Very Good,Within the past year,Yes,26.39,0,0.2,0,0,0,0,0.2,0,22.4,11.4,7.4
+40-44,Female,Very Good,Within the past year,Yes,26.63,0,0,0,0,0,0,1,0,12,12,4
+45-49,Female,Very Good,Within the past year,Yes,30.28,0,0.1,0.1,0.5,0,0.5,0.5,6.8,32.3,13.2,18
+45-49,Male,Very Good,Within the past year,Yes,27.66,0,0,0,0,0.3333,0,0.6667,3.6667,16,11.3333,10.3333
+50-54,Female,Very Good,Within the past year,Yes,34.06,0,0,0.1111,0.5556,0.2222,0.3333,0.3333,1.2222,10,9.2222,1.8889
+50-54,Male,Very Good,Within the past year,Yes,33.1,0,0,0,0,0.3333,0,0.3333,7.6667,19.3333,20.3333,10
+55-59,Female,Very Good,Within the past year,Yes,29.13,0.0833,0.0417,0.0833,0.375,0.25,0.375,0.375,1.9167,31.625,17.125,4.4167
+55-59,Male,Very Good,Within the past year,Yes,27.93,0.2,0,0.1,0,0.3,0.1,0.2,2,36.8,15.3,6.3
+60-64,Female,Very Good,Within the past year,Yes,30.03,0.0444,0.0889,0.0889,0.3333,0.3111,0.5333,0.5778,1.2,30.0222,12.1333,4.5333
+60-64,Male,Very Good,Within the past year,Yes,30.6,0.2381,0.0952,0.0952,0.2381,0.1429,0.619,0.381,4.8571,22.1905,8.0476,4.0952
+65-69,Female,Very Good,Within the past year,Yes,29.48,0.0392,0.1176,0.1373,0.1176,0.3137,0.5294,0.3725,2.098,23.8235,10.4118,3.6275
+65-69,Male,Very Good,Within the past year,Yes,29.03,0.3929,0.3571,0.1429,0.3214,0.2857,0.5714,0.5714,3.2857,22.5,9.9643,4.4286
+70-74,Female,Very Good,Within the past year,Yes,28.52,0.1266,0.1646,0.1392,0.1013,0.3165,0.6456,0.3165,2.2278,27.6203,10.2785,4.4557
+70-74,Male,Very Good,Within the past year,Yes,29.29,0.2571,0.4,0.1429,0.1429,0.2857,0.5429,0.4571,3.2286,17.3143,12.3429,6.6
+75-79,Female,Very Good,Within the past year,Yes,27.65,0.1702,0.2128,0.2128,0.0851,0.2979,0.7234,0.2766,1.8511,23.383,11.3191,3.8085
+75-79,Male,Very Good,Within the past year,Yes,28.3,0.4545,0.4545,0.2273,0.0455,0.3182,0.5,0.5455,4.8636,21.5909,10.0455,9.3636
+80+,Female,Very Good,Within the past year,Yes,25.49,0.1972,0.1831,0.2394,0.0563,0.1831,0.6056,0.2958,1.6197,22.5493,9.1831,3.3521
+80+,Male,Very Good,Within the past year,Yes,26.42,0.1481,0.2222,0.2593,0.0741,0.2963,0.4444,0.4815,6.7407,25.3704,12.7037,5.4815
