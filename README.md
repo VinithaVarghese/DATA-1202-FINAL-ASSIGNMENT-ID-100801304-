@@ -1,6 +1,7 @@
 # DATA-1202-FINAL-ASSIGNMENT-ID-100801304-
 
-**PROJECT EXPLAINED**
+****PROJECT OVERVIEW****
+
 **Health Data Analysis Repository**
 Welcome to the Health Data Analysis repository! In this project, we perform an in-depth analysis of health and lifestyle data using SQL queries to uncover valuable insights regarding health conditions, exercise habits, and age-gender patterns. The analysis is conducted using two primary datasets: "patient health and diet" and "patient profile."
 
@@ -48,9 +49,8 @@ Review the generated insights from the executed SQL queries to gain a comprehens
 **Technologies Used**
 SQL
 
-**FULL SQL CODE**
+**FULL SQL CODE WITH OUTPUT SNAPSHOTS**
 ```sql
-
 -- Extraction along with data cleaning and quality check: Count missing values in patient health and diet table --
 SELECT COUNT(*) AS MissingValues
 FROM healthdata.`patient health and diet`
@@ -65,7 +65,11 @@ WHERE Heart_Disease IS NULL
    OR Fruit_Consumption IS NULL
    OR Green_Vegetables_Consumption IS NULL
    OR FriedPotato_Consumption IS NULL;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/9fb4e705-5920-4e84-a390-c941b5eea305)
 
+```sql
 -- Extraction along with data cleaning and quality check: Count missing values in patient profile table --
 SELECT COUNT(*) AS MissingValues
 FROM healthdata.`patient profile`
@@ -77,14 +81,21 @@ WHERE General_Health IS NULL
    OR `Height_(cm)` IS NULL
    OR `Weight_(kg)` IS NULL
    OR BMI IS NULL;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/7f922dab-29d4-4ea0-949d-0752a8726119)
 
+```sql
 -- Transformation: Heart Disease Distribution and Exercise Habits Analysis --
 SELECT pp.Exercise, phd.Heart_Disease, COUNT(*) AS Count
 FROM healthdata.`patient health and diet` phd
 JOIN healthdata.`patient profile` pp ON phd.ID = pp.ID
 GROUP BY pp.Exercise, phd.Heart_Disease
 ORDER BY pp.Exercise, phd.Heart_Disease;
-
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/d5e2c3a7-0543-431f-b15a-ad2b2497330f)
+```sql
 -- Transformation: Average BMI by Age Category --
 SELECT
     p.Age_Category,
@@ -95,7 +106,11 @@ GROUP BY
     p.Age_Category
 ORDER BY
     p.Age_Category;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/8c81d9fa-b497-4bb4-854a-f03f804a0779)
 
+```sql
 -- Transformation: Gender-based Health Patterns --
 SELECT
     p.Sex,
@@ -113,7 +128,11 @@ GROUP BY
     p.Sex
 ORDER BY
     p.Sex;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/a1d0cbf4-0083-4186-966c-d32a71d2fad0)
 
+```sql
 -- Transformation: Nutrition Habits and Health Conditions --
 SELECT
     AVG(CASE WHEN hd.Heart_Disease = 'Yes' THEN 1 ELSE 0 END) AS Heart_Disease_Rate,
@@ -129,7 +148,11 @@ FROM
     healthdata.`patient health and diet` hd
 JOIN
     healthdata.`patient profile` p ON hd.ID = p.ID;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/997d428e-a686-49f9-8157-ddee40c6a096)
 
+```sql
 -- Transformation: Average BMI by General Health Status --
 SELECT
     p.General_Health,
@@ -138,13 +161,22 @@ FROM
     healthdata.`patient profile` p
 GROUP BY
     p.General_Health;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/d32816d5-47e7-4ed4-99bc-ab122fb40e02)
 
+```sql
 -- Transformation: CHECK DATA TYPES --
 SELECT COLUMN_NAME, DATA_TYPE
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = 'healthdata'
   AND TABLE_NAME IN ('patient health and diet', 'patient profile');    
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/6b82e51c-0de3-4aee-9dff-0ad609bbfba3)
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/1dbf0df4-d585-4bc4-bf2d-be1fe89d074a)
 
+```sql
 -- Loading along with data cleaning and quality check: GENERAL AGE_GENDER_HEALTH_INSIGHTS -- 
 CREATE TABLE AGE_GENDER_HEALTH_INSIGHTS AS (
     SELECT
@@ -189,19 +221,31 @@ CREATE TABLE AGE_GENDER_HEALTH_INSIGHTS AS (
         END,
         p.Sex
 );
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/a3d69ff4-c9c1-441a-94ca-1e6c1a6930b9)
 
+```sql
 -- Loading: View to Get Average BMI by Age Category --
 CREATE VIEW Avg_BMI_By_Age AS
 SELECT Age_Category, Avg_BMI
 FROM AGE_GENDER_HEALTH_INSIGHTS
 GROUP BY Age_Category, Avg_BMI;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/10260ebf-37bd-46fd-825e-81443d66a010)
 
+```sql
 -- Loading: View to Get Age-based Depression Rates --
 CREATE VIEW Age_Depression_Rates AS
 SELECT Age_Category, Depression_Rate
 FROM AGE_GENDER_HEALTH_INSIGHTS
 GROUP BY Age_Category, Depression_Rate;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/b00ab384-3ee3-4407-8cab-18f2b923f496)
 
+```sql
 -- Loading: View to Get Smoking and Alcohol Consumption Patterns --
 CREATE VIEW smoking_alcohol_patterns AS
 SELECT
@@ -210,7 +254,11 @@ SELECT
     AVG(Average_Alcohol_Consumption) AS Avg_Average_Alcohol_Consumption
 FROM AGE_GENDER_HEALTH_INSIGHTS
 GROUP BY Sex;
+```
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/dceb704e-530f-4503-9d2a-a5bf914ee301)
 
+```sql
 -- Loading: View to Get Nutritional Habits and Health Conditions --
 CREATE VIEW Nutrition_Health_Habits AS
 SELECT Age_Category, Average_Fruit_Consumption, Average_Green_Vegetables_Consumption,
@@ -218,8 +266,8 @@ SELECT Age_Category, Average_Fruit_Consumption, Average_Green_Vegetables_Consump
 FROM AGE_GENDER_HEALTH_INSIGHTS
 ORDER BY Heart_Disease_Rate DESC, Diabetes_Rate DESC, Arthritis_Rate DESC;
 ```
-
-
+**OUTPUT**
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT/assets/138626409/622a0256-1be3-4b00-aaa7-947a0e56b1a9)
 
 **WHOLE PROCESS EXPLAINED WITH ISSUES FACED,SOLUTIONS AND IMPACTS**
 
@@ -251,36 +299,37 @@ Null Handling: Executed SQL statements to identify and update null values in cri
 
 In the data transformation phase, I conducted quality checks, performed transformations, and employed aggregation and JOIN operations to derive valuable insights from health-related data. Here are the details of the transformations I applied:
 
-Quality Checks:
+**Quality Checks:**
 
 Conducted checks to ensure data consistency, identifying any missing or incomplete values in critical columns like Heart_Disease, Skin_Cancer, etc.
 Verified data types to ensure correct numeric and string formats.
-Aggregation and JOIN Operations:
 
-Heart Disease Distribution and Exercise Habits Analysis:
+**Aggregation and JOIN Operations:**
+
+**Heart Disease Distribution and Exercise Habits Analysis:**
 Aggregated data by joining the 'patient health and diet' table with the 'patient profile' table using the 'ID' column. This allowed me to analyze the relationship between exercise habits, heart disease, and their distribution.
 
-Average BMI by Age Category:
+**Average BMI by Age Category:**
 Utilized a GROUP BY operation on the 'Age_Category' column in the 'patient profile' table to calculate the average BMI for each age category, providing insights into health trends by age.
 
-Gender-based Health Patterns:
+**Gender-based Health Patterns:**
 Employed a JOIN operation between the 'patient health and diet' and 'patient profile' tables using the 'ID' column. By grouping data based on 'Sex', I calculated average rates of various health conditions like Heart Disease, Skin Cancer, etc.
 
-Nutrition Habits and Health Conditions:
+**Nutrition Habits and Health Conditions:**
 Used aggregation and JOIN operations to analyze nutrition habits and health conditions, calculating average rates of various health conditions and nutritional habits from both tables.
 
-Average BMI by General Health Status:
+**Average BMI by General Health Status:**
 Aggregated data by 'General_Health' status using the 'patient profile' table, calculating the rounded average BMI for each health status category.
 
-**EFFECTS OF TRANSFORMATIONS:****
+**EFFECTS OF TRANSFORMATIONS:**
 
-Insightful Analysis: The applied transformations allowed me to gain valuable insights into the relationships between health conditions, exercise habits, nutrition, and demographic factors such as age and gender.
+**Insightful Analysis:** The applied transformations allowed me to gain valuable insights into the relationships between health conditions, exercise habits, nutrition, and demographic factors such as age and gender.
 
-Better Decision-Making: Aggregating and analyzing data through GROUP BY and JOIN operations enabled me to identify patterns and trends, aiding in data-driven decision-making for health-related recommendations and interventions.
+**Better Decision-Making:** Aggregating and analyzing data through GROUP BY and JOIN operations enabled me to identify patterns and trends, aiding in data-driven decision-making for health-related recommendations and interventions.
 
-Data Integrity Enhancement: Addressing missing values and data inconsistencies during quality checks improved the integrity of the data, ensuring accurate analysis and insights.
+**Data Integrity Enhancement:** Addressing missing values and data inconsistencies during quality checks improved the integrity of the data, ensuring accurate analysis and insights.
 
-Deeper Understanding: The transformations helped in understanding correlations between different health factors and demographic characteristics, contributing to a more comprehensive view of the dataset.
+**Deeper Understanding:** The transformations helped in understanding correlations between different health factors and demographic characteristics, contributing to a more comprehensive view of the dataset.
 
 
 **DATA LOADING**
@@ -293,18 +342,21 @@ During the data loading phase, I incorporated the cleaned and transformed data i
 
 **HOW THIS PROCESS WAS DONE:**
 
-Database Structure and Transformation: After performing data cleaning and transformation, I had a set of cleaned and processed tables representing different aspects of health and lifestyle data. These tables were designed to be free of inconsistencies, missing values, and outliers, ensuring the integrity of the data.
+**Database Structure and Transformation:**
+After performing data cleaning and transformation, I had a set of cleaned and processed tables representing different aspects of health and lifestyle data. These tables were designed to be free of inconsistencies, missing values, and outliers, ensuring the integrity of the data.
 
-Creating Views: Instead of creating new physical tables to store the transformed data, I opted to create views. Views are virtual tables that are defined by SQL queries. They allow users to query and retrieve data just like they would from a regular table. Views don't store data themselves; they simply present the data in a structured format based on the underlying source tables thereby consuming only minimal additional storage space.
+**Creating Views:**
+Instead of creating new physical tables to store the transformed data, I opted to create views. Views are virtual tables that are defined by SQL queries. They allow users to query and retrieve data just like they would from a regular table. Views don't store data themselves; they simply present the data in a structured format based on the underlying source tables thereby consuming only minimal additional storage space.
+
 I created views using SQL queries that combined data from multiple source tables based on common columns or criteria. For instance, I created a view to calculate average BMI by age category, another view to capture health patterns by gender, and so on.
 
 **THE RATIONALS FOR USING VIEWS**
 
-Loading Impact: By using views to load the data, the impact on the database was minimized in terms of storage and maintenance. It helped maintain data integrity and consistency and allowed users to efficiently query and analyze the transformed data without needing to re-run transformations each time.
+**Loading Impact:** By using views to load the data, the impact on the database was minimized in terms of storage and maintenance. It helped maintain data integrity and consistency and allowed users to efficiently query and analyze the transformed data without needing to re-run transformations each time.
 
-Querying: Analysts and users could easily query the views to extract meaningful insights without dealing with the intricacies of data transformations. The views provided a convenient way to perform various analyses and generate reports.
+**Querying:** Analysts and users could easily query the views to extract meaningful insights without dealing with the intricacies of data transformations. The views provided a convenient way to perform various analyses and generate reports.
 
-Real-time Data: Views allowed real-time access to the most up-to-date data. Any changes made to the source tables would be immediately reflected in the views.
+**Real-time Data:** Views allowed real-time access to the most up-to-date data. Any changes made to the source tables would be immediately reflected in the views.
 
 In summary, the decision to load the cleaned and transformed data through views was motivated by the need for data integrity, performance optimization, data abstraction, and access control. This approach streamlined data access, reduced data duplication, and ensured that the most accurate and up-to-date information was available for analysis tasks.
 
