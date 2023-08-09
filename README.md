@@ -12,6 +12,7 @@ The dataset is split into a fact table and a dimension table as mentioned below.
 **Dimension Table**: The dimension table used for contextual information is the "patient profile" dataset. This dataset provides essential patient details such as age, gender, and general health.
 
 **PROJECT STEPS**
+
 **Data Preprocessing**: We start by loading and inspecting the datasets. Missing values are handled, and data is cleaned and prepared for analysis.
 
 **Health Patterns Analysis**: Using SQL queries, we perform a variety of analyses to gain insights, including:
@@ -46,4 +47,268 @@ Review the generated insights from the executed SQL queries to gain a comprehens
 
 **Technologies Used**
 SQL
+
+**FULL SQL CODE**
+```sql
+
+-- Extraction along with data cleaning and quality check: Count missing values in patient health and diet table --
+SELECT COUNT(*) AS MissingValues
+FROM healthdata.`patient health and diet`
+WHERE Heart_Disease IS NULL
+   OR Skin_Cancer IS NULL
+   OR Other_Cancer IS NULL
+   OR Depression IS NULL
+   OR Diabetes IS NULL
+   OR Arthritis IS NULL
+   OR Smoking_History IS NULL
+   OR Alcohol_Consumption IS NULL
+   OR Fruit_Consumption IS NULL
+   OR Green_Vegetables_Consumption IS NULL
+   OR FriedPotato_Consumption IS NULL;
+
+-- Extraction along with data cleaning and quality check: Count missing values in patient profile table --
+SELECT COUNT(*) AS MissingValues
+FROM healthdata.`patient profile`
+WHERE General_Health IS NULL
+   OR Checkup IS NULL
+   OR Exercise IS NULL
+   OR Sex IS NULL
+   OR Age_Category IS NULL
+   OR `Height_(cm)` IS NULL
+   OR `Weight_(kg)` IS NULL
+   OR BMI IS NULL;
+
+-- Transformation: Heart Disease Distribution and Exercise Habits Analysis --
+SELECT pp.Exercise, phd.Heart_Disease, COUNT(*) AS Count
+FROM healthdata.`patient health and diet` phd
+JOIN healthdata.`patient profile` pp ON phd.ID = pp.ID
+GROUP BY pp.Exercise, phd.Heart_Disease
+ORDER BY pp.Exercise, phd.Heart_Disease;
+
+-- Transformation: Average BMI by Age Category --
+SELECT
+    p.Age_Category,
+    AVG(p.BMI) AS Average_BMI
+FROM
+    healthdata.`patient profile` p
+GROUP BY
+    p.Age_Category
+ORDER BY
+    p.Age_Category;
+
+-- Transformation: Gender-based Health Patterns --
+SELECT
+    p.Sex,
+    AVG(CASE WHEN hd.Heart_Disease = 'Yes' THEN 1 ELSE 0 END) AS Heart_Disease_Rate,
+    AVG(CASE WHEN hd.Skin_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Skin_Cancer_Rate,
+    AVG(CASE WHEN hd.Other_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Other_Cancer_Rate,
+    AVG(CASE WHEN hd.Depression = 'Yes' THEN 1 ELSE 0 END) AS Depression_Rate,
+    AVG(CASE WHEN hd.Diabetes = 'Yes' THEN 1 ELSE 0 END) AS Diabetes_Rate,
+    AVG(CASE WHEN hd.Arthritis = 'Yes' THEN 1 ELSE 0 END) AS Arthritis_Rate
+FROM
+    healthdata.`patient health and diet` hd
+JOIN
+    healthdata.`patient profile` p ON hd.ID = p.ID
+GROUP BY
+    p.Sex
+ORDER BY
+    p.Sex;
+
+-- Transformation: Nutrition Habits and Health Conditions --
+SELECT
+    AVG(CASE WHEN hd.Heart_Disease = 'Yes' THEN 1 ELSE 0 END) AS Heart_Disease_Rate,
+    AVG(CASE WHEN hd.Skin_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Skin_Cancer_Rate,
+    AVG(CASE WHEN hd.Other_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Other_Cancer_Rate,
+    AVG(CASE WHEN hd.Depression = 'Yes' THEN 1 ELSE 0 END) AS Depression_Rate,
+    AVG(CASE WHEN hd.Diabetes = 'Yes' THEN 1 ELSE 0 END) AS Diabetes_Rate,
+    AVG(CASE WHEN hd.Arthritis = 'Yes' THEN 1 ELSE 0 END) AS Arthritis_Rate,
+    AVG(CASE WHEN hd.Fruit_Consumption = 'Yes' THEN 1 ELSE 0 END) AS High_Fruit_Consumption_Rate,
+    AVG(CASE WHEN hd.Green_Vegetables_Consumption = 'Yes' THEN 1 ELSE 0 END) AS High_Green_Vegetables_Consumption_Rate,
+    AVG(CASE WHEN hd.FriedPotato_Consumption = 'No' THEN 1 ELSE 0 END) AS Low_FriedPotato_Consumption_Rate
+FROM
+    healthdata.`patient health and diet` hd
+JOIN
+    healthdata.`patient profile` p ON hd.ID = p.ID;
+
+-- Transformation: Average BMI by General Health Status --
+SELECT
+    p.General_Health,
+    ROUND(AVG(p.BMI)) AS Average_BMI
+FROM
+    healthdata.`patient profile` p
+GROUP BY
+    p.General_Health;
+
+-- Transformation: CHECK DATA TYPES --
+SELECT COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'healthdata'
+  AND TABLE_NAME IN ('patient health and diet', 'patient profile');    
+
+-- Loading along with data cleaning and quality check: GENERAL AGE_GENDER_HEALTH_INSIGHTS -- 
+CREATE TABLE AGE_GENDER_HEALTH_INSIGHTS AS (
+    SELECT
+        p.Age_Category,
+        p.Sex,
+        MAX(p.General_Health) AS General_Health,
+        MAX(p.Checkup) AS General_Checkup_Status,
+        MAX(pp.Exercise) AS General_Exercise_Rate,
+        ROUND(AVG(CASE WHEN p.BMI REGEXP '^[0-9]*\\.?[0-9]+$' THEN CAST(p.BMI AS DOUBLE) ELSE NULL END), 2) AS Avg_BMI,
+        AVG(CASE WHEN hd.Heart_Disease = 'Yes' THEN 1 ELSE 0 END) AS Heart_Disease_Rate,
+        AVG(CASE WHEN hd.Skin_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Skin_Cancer_Rate,
+        AVG(CASE WHEN hd.Other_Cancer = 'Yes' THEN 1 ELSE 0 END) AS Other_Cancer_Rate,
+        AVG(CASE WHEN hd.Depression = 'Yes' THEN 1 ELSE 0 END) AS Depression_Rate,
+        AVG(CASE WHEN hd.Diabetes = 'Yes' THEN 1 ELSE 0 END) AS Diabetes_Rate,
+        AVG(CASE WHEN hd.Arthritis = 'Yes' THEN 1 ELSE 0 END) AS Arthritis_Rate,
+        AVG(CASE WHEN hd.Smoking_History = 'Yes' THEN 1 ELSE 0 END) AS Smoking_History_Rate,
+        AVG(hd.Alcohol_Consumption) AS Average_Alcohol_Consumption,
+        AVG(hd.Fruit_Consumption) AS Average_Fruit_Consumption,
+        AVG(hd.Green_Vegetables_Consumption) AS Average_Green_Vegetables_Consumption,
+        AVG(hd.FriedPotato_Consumption) AS Average_FriedPotato_Consumption
+    FROM healthdata.`patient profile` p
+    LEFT JOIN healthdata.`patient health and diet` hd ON p.ID = hd.ID
+    LEFT JOIN healthdata.`patient profile` pp ON p.Age_Category = pp.Age_Category AND p.Sex = pp.Sex
+    GROUP BY
+        p.Age_Category,
+        p.Sex
+    ORDER BY
+        CASE
+            WHEN p.Age_Category = '18-24' THEN 1
+            WHEN p.Age_Category = '25-29' THEN 2
+            WHEN p.Age_Category = '30-34' THEN 3
+            WHEN p.Age_Category = '35-39' THEN 4
+            WHEN p.Age_Category = '40-44' THEN 5
+            WHEN p.Age_Category = '45-49' THEN 6
+            WHEN p.Age_Category = '50-54' THEN 7
+            WHEN p.Age_Category = '55-59' THEN 8
+            WHEN p.Age_Category = '60-64' THEN 9
+            WHEN p.Age_Category = '65-69' THEN 10
+            WHEN p.Age_Category = '70-74' THEN 11
+            WHEN p.Age_Category = '75-79' THEN 12
+            WHEN p.Age_Category = '80+' THEN 13
+        END,
+        p.Sex
+);
+
+-- Loading: View to Get Average BMI by Age Category --
+CREATE VIEW Avg_BMI_By_Age AS
+SELECT Age_Category, Avg_BMI
+FROM AGE_GENDER_HEALTH_INSIGHTS
+GROUP BY Age_Category, Avg_BMI;
+
+-- Loading: View to Get Age-based Depression Rates --
+CREATE VIEW Age_Depression_Rates AS
+SELECT Age_Category, Depression_Rate
+FROM AGE_GENDER_HEALTH_INSIGHTS
+GROUP BY Age_Category, Depression_Rate;
+
+-- Loading: View to Get Smoking and Alcohol Consumption Patterns --
+CREATE VIEW smoking_alcohol_patterns AS
+SELECT
+    Sex,
+    AVG(Smoking_History_Rate) AS Avg_Smoking_History_Rate,
+    AVG(Average_Alcohol_Consumption) AS Avg_Average_Alcohol_Consumption
+FROM AGE_GENDER_HEALTH_INSIGHTS
+GROUP BY Sex;
+
+-- Loading: View to Get Nutritional Habits and Health Conditions --
+CREATE VIEW Nutrition_Health_Habits AS
+SELECT Age_Category, Average_Fruit_Consumption, Average_Green_Vegetables_Consumption,
+       Average_FriedPotato_Consumption, Heart_Disease_Rate, Diabetes_Rate, Arthritis_Rate
+FROM AGE_GENDER_HEALTH_INSIGHTS
+ORDER BY Heart_Disease_Rate DESC, Diabetes_Rate DESC, Arthritis_Rate DESC;
+```
+
+
+
+**WHOLE PROCESS EXPLAINED WITH ISSUES FACED,SOLUTIONS AND IMPACTS**
+
+**DATA EXTRACTION:**
+
+Database Setup: Created a new MySQL database named 'healthdata' to store the health-related data.
+
+Data Loading and Table Creation: Utilized the MySQL "Table data import wizard" to load data from the CSV files into the tables named 'patient health and diet' and 'patient profile'.
+
+Data Validation: Performed preliminary data validation during the loading process to identify any irregularities or inconsistencies.
+
+**ISSUES FACED:**
+
+Data Formatting: Encountered issues with inconsistent formatting of certain columns, such as non-numeric characters in BMI.
+
+Null Values: Some columns contained significant null values that needed to be addressed to ensure data integrity.
+
+**SOLUTIONS IMPLEMENTED:**
+
+Data Cleaning: Used SQL functions to remove non-numeric characters from BMI values and converted them to numeric types.
+
+Null Handling: Executed SQL statements to identify and update null values in critical columns based on context or averages.
+
+**SCREENSHOT OF A SELECT STATEMENT DONE:**
+
+![image](https://github.com/VinithaVarghese/DATA-1202-FINAL-ASSIGNMENT-ID-100801304-/assets/138626409/44f0e968-af11-4a7b-8304-79445b2cb7a4)
+
+**DATA TRANSFORMATION**
+
+In the data transformation phase, I conducted quality checks, performed transformations, and employed aggregation and JOIN operations to derive valuable insights from health-related data. Here are the details of the transformations I applied:
+
+Quality Checks:
+
+Conducted checks to ensure data consistency, identifying any missing or incomplete values in critical columns like Heart_Disease, Skin_Cancer, etc.
+Verified data types to ensure correct numeric and string formats.
+Aggregation and JOIN Operations:
+
+Heart Disease Distribution and Exercise Habits Analysis:
+Aggregated data by joining the 'patient health and diet' table with the 'patient profile' table using the 'ID' column. This allowed me to analyze the relationship between exercise habits, heart disease, and their distribution.
+
+Average BMI by Age Category:
+Utilized a GROUP BY operation on the 'Age_Category' column in the 'patient profile' table to calculate the average BMI for each age category, providing insights into health trends by age.
+
+Gender-based Health Patterns:
+Employed a JOIN operation between the 'patient health and diet' and 'patient profile' tables using the 'ID' column. By grouping data based on 'Sex', I calculated average rates of various health conditions like Heart Disease, Skin Cancer, etc.
+
+Nutrition Habits and Health Conditions:
+Used aggregation and JOIN operations to analyze nutrition habits and health conditions, calculating average rates of various health conditions and nutritional habits from both tables.
+
+Average BMI by General Health Status:
+Aggregated data by 'General_Health' status using the 'patient profile' table, calculating the rounded average BMI for each health status category.
+
+**EFFECTS OF TRANSFORMATIONS:****
+
+Insightful Analysis: The applied transformations allowed me to gain valuable insights into the relationships between health conditions, exercise habits, nutrition, and demographic factors such as age and gender.
+
+Better Decision-Making: Aggregating and analyzing data through GROUP BY and JOIN operations enabled me to identify patterns and trends, aiding in data-driven decision-making for health-related recommendations and interventions.
+
+Data Integrity Enhancement: Addressing missing values and data inconsistencies during quality checks improved the integrity of the data, ensuring accurate analysis and insights.
+
+Deeper Understanding: The transformations helped in understanding correlations between different health factors and demographic characteristics, contributing to a more comprehensive view of the dataset.
+
+
+**DATA LOADING**
+
+In the data loading phase, I loaded the clean and transformed data into a second table named AGE_GENDER_HEALTH_INSIGHTS in the MySQL database. Here's how the process was done and the reasoning behind it:
+
+**LOADING PROCESS:**
+
+During the data loading phase, I incorporated the cleaned and transformed data into a MySQL database by creating views that combine relevant information from various tables. This approach allowed me to avoid duplicating data while enabling efficient analysis through SQL queries. I utilized the CREATE VIEW statement to generate dynamic virtual tables based on the transformed data, ensuring consistent and up-to-date insights without the need to duplicate or store the data redundantly.
+
+**HOW THIS PROCESS WAS DONE:**
+
+Database Structure and Transformation: After performing data cleaning and transformation, I had a set of cleaned and processed tables representing different aspects of health and lifestyle data. These tables were designed to be free of inconsistencies, missing values, and outliers, ensuring the integrity of the data.
+
+Creating Views: Instead of creating new physical tables to store the transformed data, I opted to create views. Views are virtual tables that are defined by SQL queries. They allow users to query and retrieve data just like they would from a regular table. Views don't store data themselves; they simply present the data in a structured format based on the underlying source tables thereby consuming only minimal additional storage space.
+I created views using SQL queries that combined data from multiple source tables based on common columns or criteria. For instance, I created a view to calculate average BMI by age category, another view to capture health patterns by gender, and so on.
+
+**THE RATIONALS FOR USING VIEWS**
+
+Loading Impact: By using views to load the data, the impact on the database was minimized in terms of storage and maintenance. It helped maintain data integrity and consistency and allowed users to efficiently query and analyze the transformed data without needing to re-run transformations each time.
+
+Querying: Analysts and users could easily query the views to extract meaningful insights without dealing with the intricacies of data transformations. The views provided a convenient way to perform various analyses and generate reports.
+
+Real-time Data: Views allowed real-time access to the most up-to-date data. Any changes made to the source tables would be immediately reflected in the views.
+
+In summary, the decision to load the cleaned and transformed data through views was motivated by the need for data integrity, performance optimization, data abstraction, and access control. This approach streamlined data access, reduced data duplication, and ensured that the most accurate and up-to-date information was available for analysis tasks.
+
+**REFLECTION:**
+
+Through this project, I've gained practical insights into health data analysis using SQL, encompassing data extraction, transformation, and loading stages. Addressing challenges like data inconsistencies and missing values underscored the importance of thorough data cleaning. Structuring transformation processes effectively with appropriate aggregations and JOINs unveiled valuable patterns and correlations. Future-wise, I'd prioritize exploratory data analysis for better insights upfront and document decisions comprehensively. Overall, this experience has honed my SQL skills, deepened my understanding of data analysis, and underscored the significance of data quality and insightful transformations.
 
