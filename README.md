@@ -5,6 +5,10 @@
 **Health Data Analysis Repository**
 Welcome to the Health Data Analysis repository! In this project, we perform an in-depth analysis of health and lifestyle data using SQL queries to uncover valuable insights regarding health conditions, exercise habits, and age-gender patterns. The analysis is conducted using two primary datasets: "patient health and diet" and "patient profile."
 
+**ANALYSIS AND BUSINESS PROBLEM:**
+
+In the context of this project, our upcoming journey will embark on a comprehensive exploration of health data, propelled by meticulous data analysis. This endeavor assumes paramount importance within the health industry, as it addresses the central business challenge of deriving actionable insights from intricate health and lifestyle data. Through the adept utilization of SQL, our efforts will be directed toward unraveling correlations among health conditions, exercise habits, and demographic attributes. This impending analysis carried out through a strategic framework of data extraction, transformation, and loading, will cast light on pivotal patterns that can serve as the bedrock for informed decisions. These decisions hold significant promise for the health industry, contributing to the formulation of evidence-based strategies to effectively address pressing concerns such as heart disease, depression, exercise behaviors, and more. The systematic process of rigorous data cleaning, transformation, and coherent analysis will not only underscore the substantial potential of data-driven insights but will also position our project as a catalyst for fostering improved health outcomes within the industry.
+
 **DATA SOURCES USED**
 The data source for this assignment is downloaded from below link:
 **https://www.kaggle.com/datasets/alphiree/cardiovascular-diseases-risk-prediction-dataset**
@@ -34,20 +38,34 @@ The age group most prone to heart disease is 45-49, and their exercise habit is 
 The sex most prone to depression is male, and their exercise habit is low.
 The age group most prone to depression is 60-64, and their exercise habit is low.
 
-**Repository Structure**
-DATASETS: Contains the raw datasets used for analysis including fact table and dimension table.
-SCREENSHOTS: SQL code snippets for analysis stored in text files.
+**REPOSITORY STRUCTURE**
+CODE: The scripts used for the ETL process.
+DATASETS: Contains the raw datasets used for analysis including fact table and dimension table along with the exported output file after the ETL process.
+VIEWS EXPORTED: The view outputs created using "CREATE VIEW" are exported as CSV files.
 README.md: The file you're currently reading, which provides an overview of the project.
-CODE: The scripts used for ETL process.
 
-**How to Run**
-To replicate the analysis and generate insights:
-Set up your database and load the "patient health and diet" and "patient profile" datasets.
-Execute the SQL code snippets provided in the text files within the notebooks directory.
-Review the generated insights from the executed SQL queries to gain a comprehensive understanding of the data patterns.
+**GETTING STARTED:**
 
-**Technologies Used**
-SQL
+To set up and run this project on your local machine, follow these steps. First, ensure you have the required prerequisites installed. 
+
+**Prerequisites:**
+Python 3.6 or higher
+MySQL Database Server
+
+**Installing:**
+Install MySQL: Download and install MySQL Server and MySQL Workbench to create and manage the database.
+Clone the Repository: Clone the project repository from GitHub to your local machine using Git.
+Import Datasets: Import the provided datasets, "patient health and diet" and "patient profile," into your MySQL database.
+Run SQL Queries: Execute the SQL code snippets provided in the project to perform data cleaning, transformation, and analysis.
+Running the Tests:
+To validate the project's accuracy, automated tests have been implemented. To run these tests, use the testing framework provided in the repository. The tests cover data quality checks, transformation accuracy, and the generation of meaningful insights.
+
+**Deployment:**
+For deploying this project on a live system, ensure you have a production-ready MySQL environment. You can deploy the project on a cloud platform with MySQL support, making it accessible to stakeholders for data-driven decision-making.
+
+**Built With**
+MySQL - The relational database management system used for storing and querying the data.
+SQL - The programming language used for data manipulation and analysis.
 
 **FULL SQL CODE WITH OUTPUT SNAPSHOTS**
 ```sql
@@ -368,3 +386,8 @@ The reflection on this project underscores the significance of thoughtful data c
 
 An especially captivating aspect of this project was the creation of dynamic views, which provided real-time access to insights while minimizing storage and maintenance impacts. This strategic decision illuminated the interplay between health factors and demographics, revealing trends that can guide informed decision-making. Looking forward, I now recognize the importance of exploratory data analysis at the outset and comprehensive documentation throughout the process. Ultimately, this project has not only enhanced my SQL skills but has also deepened my appreciation for the crucial role of data quality in driving transformative insights.
 
+**AUTHOR:**
+Vinitha Varghese
+
+**ACKNOWLEDGEMENTS:**
+I extend my gratitude to PurpleBooth for their insightful README template, which served as an excellent reference for structuring this document. Additionally, I acknowledge the valuable course material provided by Durham College, which contributed to enhancing my data analysis skills and knowledge.
